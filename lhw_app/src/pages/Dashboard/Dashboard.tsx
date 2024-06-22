@@ -1,48 +1,21 @@
 import React from "react";
- 
 import { Link } from "react-router-dom";
 import Table from "./Table";
-import FreightList from "./FreightList";
-import PopupForm from "../Form/VehicleTypeForm";
 
 const Dashboard: React.FC = () => {
   return (
     <div>
-      <div className="bg-[#2A333E] sticky top-0 w-full z-10 h-[100px]">
+       <div className="bg-[#2A333E] sticky top-0 w-full z-10 h-[100px]">
         
-      </div>
-
+      </div> 
       <div className="flex flex-col">
-        <button
-          data-drawer-target="default-sidebar"
-          data-drawer-toggle="default-sidebar"
-          aria-controls="default-sidebar"
-          type="button"
-          className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-[#091E420A] focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-[#091E420A] dark:focus:ring-gray-600"
-        >
-          <span className="sr-only">Open sidebar</span>
-          <svg
-            className="w-6 h-6"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              clipRule="evenodd"
-              fillRule="evenodd"
-              d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-            ></path>
-          </svg>
-        </button>
-
         <aside
           id="default-sidebar"
           className="fixed top-0 left-0 z-40 w-60 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[#FAFBFC]"
           aria-label="Sidebar"
         >
           <div className=" bg-[#2A333E] w-full h-[100px] flex items-center justify-center border-r-2">
-            <svg
+          <svg
               width="116"
               height="29"
               viewBox="0 0 116 29"
@@ -111,12 +84,12 @@ const Dashboard: React.FC = () => {
                 </linearGradient>
               </defs>
             </svg>
-          </div>
+          </div> 
           <div className="h-full px-3 py-4 overflow-y-auto">
             <ul className="space-y-2 font-medium">
               <li>
                 <Link
-                  to="#"
+                  to="/dashboard"
                   className="flex items-center p-2 text-black rounded-lg hover:bg-[#091E420A] group"
                 >
                   <svg
@@ -139,7 +112,7 @@ const Dashboard: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/customer"
                   className="flex items-center p-2 text-black rounded-lg hover:bg-[#091E420A] group"
                 >
                   <svg
@@ -164,7 +137,7 @@ const Dashboard: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/your-cart"
                   className="flex items-center p-2 text-black rounded-lg hover:bg-[#091E420A] group"
                 >
                   <svg
@@ -187,7 +160,7 @@ const Dashboard: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/past-orders"
                   className="flex items-center p-2 text-black rounded-lg hover:bg-[#091E420A] group"
                 >
                   <svg
@@ -210,7 +183,7 @@ const Dashboard: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="sales-order-report"
                   className="flex items-center p-2 text-black rounded-lg hover:bg-[#091E420A] group"
                 >
                   <svg
@@ -233,14 +206,10 @@ const Dashboard: React.FC = () => {
             </ul>
           </div>
         </aside>
-
         <div className="flex-1 justify-between ml-64 p-4">
-
           <Table />
         </div>
-        <div className="flex-1 ml-64 p-4">
-          <FreightList />
-        </div>
+      
       </div>
     </div>
   );

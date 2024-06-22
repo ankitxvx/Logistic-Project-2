@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import FreightListForm from '../Form/FreightListForm';
 
-interface TableRow {
-  vehicle: string;
+interface Freight {
+  vehicleType: string;
   distance: string;
   totalKm: string;
   driverFreight: string;
@@ -12,20 +13,31 @@ interface TableRow {
   maxTime: string;
 }
 
-const tableData: TableRow[] = [
-  { vehicle: 'TUK TUK', distance: 'Distance', totalKm: 'Total KM', driverFreight: 'Driver Freight', overLimitTripPrice: 'Over Limit Trip Price', customerTripPrice: 'Customer Trip Price', overLimitPrice: 'Over Limit Price', minTime: 'Early Min', maxTime: 'Last' },
-  { vehicle: 'TUK TUK', distance: 'Distance', totalKm: 'Total KM', driverFreight: 'Driver Freight', overLimitTripPrice: 'Over Limit Trip Price', customerTripPrice: 'Customer Trip Price', overLimitPrice: 'Over Limit Price', minTime: 'Early Min', maxTime: 'Last' },
-  { vehicle: 'TUK TUK', distance: 'Distance', totalKm: 'Total KM', driverFreight: 'Driver Freight', overLimitTripPrice: 'Over Limit Trip Price', customerTripPrice: 'Customer Trip Price', overLimitPrice: 'Over Limit Price', minTime: 'Early Min', maxTime: 'Last' },
-  { vehicle: 'TUK TUK', distance: 'Distance', totalKm: 'Total KM', driverFreight: 'Driver Freight', overLimitTripPrice: 'Over Limit Trip Price', customerTripPrice: 'Customer Trip Price', overLimitPrice: 'Over Limit Price', minTime: 'Early Min', maxTime: 'Last' },
-  { vehicle: 'TUK TUK', distance: 'Distance', totalKm: 'Total KM', driverFreight: 'Driver Freight', overLimitTripPrice: 'Over Limit Trip Price', customerTripPrice: 'Customer Trip Price', overLimitPrice: 'Over Limit Price', minTime: 'Early Min', maxTime: 'Last' },
-  // Add more rows as needed to test the scroll functionality
-];
-
 const ResponsiveTable: React.FC = () => {
+  const [freights, setFreights] = useState<Freight[]>([]);
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/freights/allfreight');
+      if (response.ok) {
+        const data = await response.json();
+        setFreights(data);
+      } else {
+        console.error('Failed to fetch freights');
+      }
+    } catch (error) {
+      console.error('Error fetching freights:', error);
+    }
+  };
+  useEffect(() => {
+    fetchVehicles();
+  }, [freights]);
   return (
-    <div> 
+    <div className=''>
+    <div className='flex justify-between'>
     <h1 className="text-[#107D9F] text-2xl mb-5">Freight List</h1>
-    <div className="overflow-x-auto overflow-y-auto max-h-80"> {/* Adjust max-h-* to your needs */}
+    <FreightListForm/>
+    </div>
+    <div className="overflow-x-auto overflow-y-auto max-h-80"> 
       <table className="min-w-full border-collapse">
         <thead className='bg-gray-100 sticky  z-[-1]'>
           <tr>
@@ -41,17 +53,17 @@ const ResponsiveTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((row, index) => (
+          {freights.map((freight, index) => (
             <tr key={index}  >
-              <td className="border border-gray-300 px-4 py-2">{row.vehicle}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.distance}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.totalKm}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.driverFreight}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.overLimitTripPrice}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.customerTripPrice}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.overLimitPrice}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.minTime}</td>
-              <td className="border border-gray-300 px-4 py-2">{row.maxTime}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.vehicleType}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.distance}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.totalKm}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.driverFreight}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.overLimitTripPrice}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.customerTripPrice}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.overLimitPrice}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.minTime}</td>
+              <td className="border border-gray-200 px-4 py-2">{freight.maxTime}</td>
             </tr>
           ))}
         </tbody>

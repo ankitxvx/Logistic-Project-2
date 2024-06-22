@@ -5,19 +5,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-const vehicleRoutes_1 = __importDefault(require("./routes/vehicleRoutes"));
+const vehicles_1 = __importDefault(require("./routes/vehicles"));
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 5000;
+const port = 5000;
 app.use((0, cors_1.default)());
-app.use(body_parser_1.default.json());
-mongoose_1.default.connect('mongodb+srv://root:root@cluster0.k6x1lr2.mongodb.net/').then(() => {
-    console.log('Connected to MongoDB');
-}).catch(err => {
-    console.error('Error connecting to MongoDB:', err.message);
+app.use(express_1.default.json());
+const uri = 'mongodb://localhost:27017/lohawala';
+mongoose_1.default.connect(uri)
+    .then(() => {
+    console.log('MongoDB database connection established successfully');
+})
+    .catch(err => {
+    console.error('MongoDB connection error:', err);
 });
-app.use('/api/vehicles', vehicleRoutes_1.default);
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.use('/vehicles', vehicles_1.default);
+app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
 });

@@ -1,70 +1,122 @@
-import React from 'react';
-import PopupForm from '../Form/VehicleTypeForm';
+import React, { useEffect, useState } from "react";
+import PopupForm from "../Form/VehicleTypeForm";
+import FreightList from "./FreightList";
+import DriverList from "./DriverList";
 
 interface Vehicle {
   sn: string;
-  type: string;
+  vehicleType: string;
   capacity: string;
   kmRange: number;
-  drivers: number;
+  numberOfDrivers: number;
 }
 
-const vehicles: Vehicle[] = [
-  { sn: '01', type: 'TUK TUK', capacity: '1200Km', kmRange: 10, drivers: 9 },
-  { sn: '02', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '03', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '04', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-  { sn: '05', type: 'Truck', capacity: '1200Km', kmRange: 1000, drivers: 1000 },
-];
-
 const Table: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("vehicle");
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/vehicles/allvehicle");
+      if (response.ok) {
+        const data = await response.json();
+        setVehicles(data);
+      } else {
+        console.error("Failed to fetch vehicles");
+      }
+    } catch (error) {
+      console.error("Error fetching vehicles:", error);
+    }
+  };
+  useEffect(() => {
+    fetchVehicles();
+  }, [vehicles]);
   return (
-    <div className=''>
-        <div className='flex justify-between'>
-        <h1 className="text-[#107D9F] text-2xl mb-5">Vehicle Type</h1>
-        <PopupForm/>
-        </div>
-          
-    <div className="overflow-x-auto overflow-y-auto max-h-80"> {/* Adjust max-h-* to your needs */}
-    
-      <table className="min-w-full border-collapse">
-        <thead className="bg-gray-100 sticky z-[-1] ">
-          <tr>
-            <th className="border border-gray-300 text-left px-4 py-2">S.NO</th>
-            <th className="border w-[549px] px-[16px] border-gray-300 text-left">Vehicle Type</th>
-            <th className="border border-gray-300 text-left px-4 py-2">Capacity</th>
-            <th className="border border-gray-300 text-left px-4 py-2">Number of Km Range</th>
-            <th className="border border-gray-300 text-left px-4 py-2">Number of Drivers</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vehicles.map((vehicle, index) => (
-            <tr key={vehicle.sn}>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.sn}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.type}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.capacity}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.kmRange}</td>
-              <td className="border border-gray-300 px-4 py-2">{vehicle.drivers}</td>
-            
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    </div>
+    <>
+      <div className="flex border-b border-gray-200">
+        <button
+          className={`py-2 px-4 ${
+            activeTab === "vehicle"
+              ? "border-b-2 border-teal-600 text-teal-600"
+              : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("vehicle")}
+        >
+          <h1 className="text-[#107D9F] text-2xl mb-0">Vehicle Type</h1>
+        </button>
+        <button
+          className={`py-2 px-4 ${
+            activeTab === "drivers"
+              ? "border-b-2 border-teal-600 text-teal-600"
+              : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("drivers")}
+        >
+          <h1 className="text-[#107D9F] text-2xl mb-0">Drivers</h1>
+        </button>
+      </div>
+      <div className="p-4">
+        {activeTab === "vehicle" && (
+          <div>
+            <div className="flex justify-between">
+              <div className=""></div>
+              <PopupForm />
+            </div>
+            <div className="overflow-x-auto overflow-y-auto max-h-80">
+              <table className="min-w-full border-collapse">
+                <thead className="bg-gray-100 sticky z-[-1] ">
+                  <tr>
+                    <th className="border border-gray-300 text-left px-4 py-2">
+                      S.NO
+                    </th>
+                    <th className="border w-[549px] px-[16px] border-gray-300 text-left">
+                      Vehicle Type
+                    </th>
+                    <th className="border border-gray-300 text-left px-4 py-2">
+                      Capacity
+                    </th>
+                    <th className="border border-gray-300 text-left px-4 py-2">
+                      Number of Km Range
+                    </th>
+                    <th className="border border-gray-300 text-left px-4 py-2">
+                      Number of Drivers
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {vehicles.map((vehicle, index) => (
+                    <tr key={`${vehicle.sn}-${index}`}>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {index + 1}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {vehicle.vehicleType}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {vehicle.capacity}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {vehicle.kmRange}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {vehicle.numberOfDrivers}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex-1  p-4">
+              <FreightList />
+            </div>
+          </div>
+        )}
+        {activeTab === "drivers" && (
+          <div>
+         <DriverList/>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

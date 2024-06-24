@@ -40,14 +40,14 @@ const FreightList: React.FC<FreightListProps> = ({ vType }) => {
   }, [vType]);
 
   return (
-    <div className=''>
+    <div className='mt-[50px]'>
       <div className='flex justify-between'>
         <h1 className="text-[#107D9F] text-2xl mb-5">Freight List</h1>
         <FreightListForm/>
       </div>
-      <div className="overflow-x-auto overflow-y-auto max-h-80"> 
+      <div className="overflow-x-auto  overflow-y-auto max-h-80"> 
         <table className="min-w-full border-collapse">
-          <thead className='bg-gray-100 sticky  z-[-1]'>
+          <thead className='bg-gray-100   '>
             <tr>
               <th className="border border-gray-300 text-left px-4 py-2">Vehicle</th>
               <th className="border border-gray-300 text-left px-4 py-2">Distance</th>

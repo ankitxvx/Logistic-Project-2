@@ -110,7 +110,7 @@ const FreightListForm: React.FC = () => {
                     id="vehicleType"
                     name="vehicleType"
                     value={formData.vehicleType}
-                    onChange={handleChange} // Corrected onChange handler
+                    onChange={handleChange}  
                   >
                     <option value="" disabled>
                       Select a vehicle type...

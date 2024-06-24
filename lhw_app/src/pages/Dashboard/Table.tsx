@@ -39,11 +39,11 @@ const Table: React.FC = () => {
 
   useEffect(() => {
     fetchVehicles();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts.
+  }, []);  
 
   return (
     <>
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b fixed border-gray-200">
         <button
           className={`py-2 px-4 ${
             activeTab === "vehicle"
@@ -52,7 +52,6 @@ const Table: React.FC = () => {
           }`}
           onClick={() => setActiveTab("vehicle")}
         >
-          
           <h1 className="text-[#107D9F] text-2xl mb-0">Vehicle Type</h1>
         </button>
         <button
@@ -65,7 +64,7 @@ const Table: React.FC = () => {
         >
           <h1 className="text-[#107D9F] text-2xl mb-0">Drivers</h1>
         </button>
-        <button
+        {/* <button
           className={`py-2 px-4 ${
             activeTab === "freightList"
               ? "border-b-2 border-teal-600 text-teal-600"
@@ -74,7 +73,7 @@ const Table: React.FC = () => {
           onClick={() => setActiveTab("freightList")}
         >
           <h1 className="text-[#107D9F] text-2xl mb-0">Freight List</h1>
-        </button>
+        </button> */}
       </div>
       <div className="p-4">
         {activeTab === "vehicle" && (
@@ -85,7 +84,7 @@ const Table: React.FC = () => {
             </div>
             <div className="overflow-x-auto overflow-y-auto max-h-80">
               <table className="min-w-full border-collapse">
-                <thead className="bg-gray-100 sticky z-[-1]">
+                <thead className="bg-gray-100  ">
                   <tr>
                     <th className="border border-gray-300 text-left px-4 py-2">
                       S.NO
@@ -138,12 +137,11 @@ const Table: React.FC = () => {
                 </tbody>
               </table>
             </div>
-           
           </div>
         )}
-         <div className="flex-1 p-4">
-            {activeTab === "freightList" && <FreightList vType= {vType}/>}
-          </div>
+        <div className="flex-1 p-4">
+          {activeTab === "freightList" && <FreightList vType={vType} />}
+        </div>
         {activeTab === "drivers" && <DriverList />}
       </div>
     </>

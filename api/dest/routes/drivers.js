@@ -13,29 +13,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const vehicle_1 = __importDefault(require("../models/vehicle"));
+const driver_1 = __importDefault(require("../models/driver"));
 const router = express_1.default.Router();
-router.get('/allvehicle', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/alldriver', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const vehicles = yield vehicle_1.default.find();
-        res.json(vehicles);
+        const driver = yield driver_1.default.find();
+        res.json(driver);
     }
     catch (err) {
         res.status(400).json('Error: ' + err);
     }
 }));
-router.post('/addvehicle', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { sn, vehicleType, capacity, kmRange, numberOfDrivers } = req.body;
-    const newVehicle = new vehicle_1.default({
+router.post('/adddriver', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { sn, vehicleType, driverName, vehicleCode, vehicleNumber, driverPhone } = req.body;
+    const newDriver = new driver_1.default({
         sn,
         vehicleType,
-        capacity,
-        kmRange,
-        numberOfDrivers,
+        driverName,
+        vehicleCode,
+        vehicleNumber,
+        driverPhone
     });
     try {
-        yield newVehicle.save();
-        res.json('Vehicle added!');
+        yield newDriver.save();
+        res.json('Driver added!');
     }
     catch (err) {
         res.status(400).json('Error: ' + err);

@@ -14,6 +14,9 @@ interface Vehicle {
 const Table: React.FC = () => {
   const [activeTab, setActiveTab] = useState("vehicle");
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [freights, setFreights] = useState<boolean>(false);
+  const [vType, setVType] = useState<string>("");
+
   const fetchVehicles = async () => {
     try {
       const response = await fetch("http://localhost:5000/vehicles/allvehicle");
@@ -27,9 +30,17 @@ const Table: React.FC = () => {
       console.error("Error fetching vehicles:", error);
     }
   };
+
+  const handleFreightList = (vehicleType: string) => {
+    setActiveTab("freightList");
+    setVType(vehicleType);
+    setFreights(true);
+  };
+
   useEffect(() => {
     fetchVehicles();
-  }, [vehicles]);
+  }, []); // Empty dependency array ensures this runs only once when the component mounts.
+
   return (
     <>
       <div className="flex border-b border-gray-200">
@@ -41,6 +52,7 @@ const Table: React.FC = () => {
           }`}
           onClick={() => setActiveTab("vehicle")}
         >
+          
           <h1 className="text-[#107D9F] text-2xl mb-0">Vehicle Type</h1>
         </button>
         <button
@@ -53,6 +65,16 @@ const Table: React.FC = () => {
         >
           <h1 className="text-[#107D9F] text-2xl mb-0">Drivers</h1>
         </button>
+        <button
+          className={`py-2 px-4 ${
+            activeTab === "freightList"
+              ? "border-b-2 border-teal-600 text-teal-600"
+              : "text-gray-500"
+          } `}
+          onClick={() => setActiveTab("freightList")}
+        >
+          <h1 className="text-[#107D9F] text-2xl mb-0">Freight List</h1>
+        </button>
       </div>
       <div className="p-4">
         {activeTab === "vehicle" && (
@@ -63,7 +85,7 @@ const Table: React.FC = () => {
             </div>
             <div className="overflow-x-auto overflow-y-auto max-h-80">
               <table className="min-w-full border-collapse">
-                <thead className="bg-gray-100 sticky z-[-1] ">
+                <thead className="bg-gray-100 sticky z-[-1]">
                   <tr>
                     <th className="border border-gray-300 text-left px-4 py-2">
                       S.NO
@@ -79,6 +101,9 @@ const Table: React.FC = () => {
                     </th>
                     <th className="border border-gray-300 text-left px-4 py-2">
                       Number of Drivers
+                    </th>
+                    <th className="border border-gray-300 text-left px-4 py-2">
+                      Actions
                     </th>
                   </tr>
                 </thead>
@@ -100,21 +125,26 @@ const Table: React.FC = () => {
                       <td className="border border-gray-300 px-4 py-2">
                         {vehicle.numberOfDrivers}
                       </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          className="bg-gray-100 p-2 rounded"
+                          onClick={() => handleFreightList(vehicle.vehicleType)}
+                        >
+                          Freight List
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="flex-1  p-4">
-              <FreightList />
-            </div>
+           
           </div>
         )}
-        {activeTab === "drivers" && (
-          <div>
-         <DriverList/>
+         <div className="flex-1 p-4">
+            {activeTab === "freightList" && <FreightList vType= {vType}/>}
           </div>
-        )}
+        {activeTab === "drivers" && <DriverList />}
       </div>
     </>
   );

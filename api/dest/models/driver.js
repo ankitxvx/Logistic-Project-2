@@ -24,12 +24,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const vehicleSchema = new mongoose_1.Schema({
+const driverSchema = new mongoose_1.Schema({
     sn: { type: String },
     vehicleType: { type: String, required: true },
-    capacity: { type: String, required: true },
-    kmRange: { type: Number, required: true },
-    numberOfDrivers: { type: Number, required: true },
+    driverName: { type: String, required: true },
+    vehicleCode: { type: String, required: true },
+    vehicleNumber: { type: String, required: true },
+    driverPhone: { type: Number, required: true },
 });
-const Vehicle = mongoose_1.default.model('Vehicle', vehicleSchema);
-exports.default = Vehicle;
+const Driver = mongoose_1.default.model('Driver', driverSchema);
+exports.default = Driver;

@@ -1,4 +1,4 @@
-import express from 'express';
+import express,{Response,Request} from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import vehicleRouter from "./routes/vehicles";
@@ -10,9 +10,12 @@ const port = 5000;
 
 app.use(cors());
 app.use(express.json()); 
+app.get('/', (req:Request, res:Response) => {
+  res.send('Hello World!');
+});
 
-const uri = 'mongodb://localhost:27017/lohawala';
-
+const uri = 'mongodb://Admin:lohawala_mongo123@52.66.12.20:27017';
+ 
 mongoose.connect(uri)
   .then(() => {
     console.log('MongoDB database connection established successfully');

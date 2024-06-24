@@ -27,4 +27,13 @@ router.post('/addfreight', async (req: Request, res: Response) => {
     }
 });
 
+router.get('/freights/:vtype', async (req: Request, res: Response) => {
+    try{
+        const freight = await Freight.find({vehicleType: req.params.vtype});
+        res.json(freight);
+    } catch(err){
+        res.status(400).json('Error: ' + err);
+    }
+});
+ 
 export default router;

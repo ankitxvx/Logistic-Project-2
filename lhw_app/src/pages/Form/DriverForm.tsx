@@ -104,7 +104,7 @@ const DriverForm: React.FC = () => {
                     id="vehicleType"
                     name="vehicleType"
                     value={formData.vehicleType}
-                    onChange={handleChange}
+                    onChange={()=>handleChange}
                   >
                     <option value="" disabled>
                       Select a vehicle type...

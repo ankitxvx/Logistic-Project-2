@@ -13,29 +13,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const vehicle_1 = __importDefault(require("../models/vehicle"));
+const freight_1 = __importDefault(require("../models/freight"));
 const router = express_1.default.Router();
-router.get('/allvehicle', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/allfreight', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const vehicles = yield vehicle_1.default.find();
-        res.json(vehicles);
+        const freight = yield freight_1.default.find();
+        res.json(freight);
     }
     catch (err) {
         res.status(400).json('Error: ' + err);
     }
 }));
-router.post('/addvehicle', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { sn, vehicleType, capacity, kmRange, numberOfDrivers } = req.body;
-    const newVehicle = new vehicle_1.default({
-        sn,
-        vehicleType,
-        capacity,
-        kmRange,
-        numberOfDrivers,
+router.post('/addfreight', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { vehicleType, distance, totalKm, driverFreight, overLimitTripPrice, customerTripPrice, overLimitPrice, minTime, maxTime } = req.body;
+    const newFreight = new freight_1.default({
+        vehicleType, distance, totalKm, driverFreight, overLimitTripPrice, customerTripPrice, overLimitPrice, minTime, maxTime
     });
     try {
-        yield newVehicle.save();
-        res.json('Vehicle added!');
+        yield newFreight.save();
+        res.json('Freight added!');
+    }
+    catch (err) {
+        res.status(400).json('Error: ' + err);
+    }
+}));
+router.get('/freights/:vtype', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const freight = yield freight_1.default.find({ vehicleType: req.params.vtype });
+        res.json(freight);
     }
     catch (err) {
         res.status(400).json('Error: ' + err);

@@ -27,17 +27,17 @@ const FreightListForm: React.FC = () => {
     maxTime: "",
     customVehicleType: "",
   });
+
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "vehicleType" &&
-        value !== "other" && { customVehicleType: "" }),
+      ...(name === "vehicleType" && value !== "other" && { customVehicleType: "" }),
     }));
   };
 
@@ -45,10 +45,7 @@ const FreightListForm: React.FC = () => {
     e.preventDefault();
     const finalFormData = {
       ...formData,
-      vehicleType:
-        formData.vehicleType === "other"
-          ? formData.customVehicleType
-          : formData.vehicleType,
+      vehicleType: formData.vehicleType === "other" ? formData.customVehicleType : formData.vehicleType,
     };
     try {
       const response = await fetch("http://localhost:5000/freights/addfreight", {
@@ -100,7 +97,7 @@ const FreightListForm: React.FC = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
+              <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
                   htmlFor="vehicleType"
@@ -113,30 +110,28 @@ const FreightListForm: React.FC = () => {
                     id="vehicleType"
                     name="vehicleType"
                     value={formData.vehicleType}
-                    onChange={handleChange}
+                    onChange={handleChange} // Corrected onChange handler
                   >
                     <option value="" disabled>
                       Select a vehicle type...
                     </option>
-                    <option value="tuktuk">Tuk Tuk</option>
-                    <option value="chotaHathi">Chota Hathi</option>
-                    <option value="pickup">Pickup</option>
-                    <option value="other">Other</option>
+                    <option value="Tuk Tuk">Tuk Tuk</option>
+                    <option value="Chota Hathi">Chota Hathi</option>
+                    <option value="Pickup">Pickup</option>
+                    <option value="Truck">Truck</option>
                   </select>
-                  <div>
-                  </div>
-                  {formData.vehicleType === "other" && (
-                    <input
-                      type="text"
-                      className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="customVehicleType"
-                      name="customVehicleType"
-                      placeholder="Enter vehicle type"
-                      value={formData.customVehicleType}
-                      onChange={handleChange}
-                    />
-                  )}
                 </div>
+                {formData.vehicleType === "other" && (
+                  <input
+                    type="text"
+                    className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="customVehicleType"
+                    name="customVehicleType"
+                    placeholder="Enter vehicle type"
+                    value={formData.customVehicleType}
+                    onChange={handleChange}
+                  />
+                )}
               </div>
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>

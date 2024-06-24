@@ -32,53 +32,8 @@ const Loading: React.FC = () => {
   const [entries, setEntries] = useState<Form[]>([]);
   const [form, setForm] = useState<Form>(initialFormState);
 
-  // useEffect(() => {
-  //   fetchEntries();
-  // }, []);
-
-  const fetchEntries = async  (vehicleCode:string)  => {
-    try {
-      const response = await axios.get(`http://localhost:5000/entries/${vehicleCode}`);
-       return response.data;
-       
-    } catch (error) {
-      console.error('Error fetching entries:', error);
-    }
-  };
-
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if(name === 'vehicleCode'){
-       const data =   fetchEntries(value);
-       data.then((data) => {
-              form.loadingNumber = data.loadingNumber;
-              form.vehicleType = data.vehicleType;
-              form.vehicleNumber = data.vehicleNumber;
-              form.driverName = data.driverName;
-              form.driverNumber = data.driverNumber;
-              form.distance = data.distance;
-              form.overloaded = data.overloaded;
-              form.driverFreight = data.driverFreight;
-              form.customerFreight = data.customerFreight;
-              form.vehicleCode  = data.vehicleCode;
-              setForm(form);
-        }).catch((error) => { 
-          console.error('Error fetching entries:', error);
-          form.loadingNumber =  0,
-          form.vehicleType = '',
-          form.vehicleNumber = '',
-          form.driverName =  '',
-          form.driverNumber =  '',
-          form.distance =  0,
-          form.overloaded =  '',
-          form.driverFreight =  0,
-          form.customerFreight =  0,
-          form.vehicleCode  = value;
-          setForm(form);
-        }
-      );
-        
-    }   
       
       setForm({ ...form, [name]: value });
     
@@ -106,11 +61,12 @@ const Loading: React.FC = () => {
 
   const handleSaveEntries = () => {
     console.log('Entries saved:', entries);
+    setEntries([]);
     // Additional save logic if needed
   };
 
   return (
-    <div className="gap-[40px] flex flex-col">
+    <div className="gap-[40px] flex flex-col ml-[280px] mt-2 p-2">
       <div className="flex flex-col w-full flex-wrap">
         <div className="flex mb-5 items-center gap-3">
           <h1 className="font-semibold w-[15rem] text-xl text-gray-500 capitalize">

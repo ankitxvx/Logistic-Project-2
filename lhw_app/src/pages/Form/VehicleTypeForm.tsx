@@ -22,7 +22,7 @@ const VehicleTypeForm: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -75,7 +75,7 @@ const VehicleTypeForm: React.FC = () => {
   return (
     <div className="">
       <button
-        className="bg-[#107D9F] text-white px-4 py-2 mb-5 rounded"
+        className="bg-[#107D9F] text-white px-4 py-2  rounded"
         onClick={togglePopup}
       >
         + Add Vehicle
@@ -104,7 +104,7 @@ const VehicleTypeForm: React.FC = () => {
                     id="vehicleType"
                     name="vehicleType"
                     value={formData.vehicleType}
-                    onChange={()=>handleChange}
+                    onChange={handleChange}
                   >
                     <option value="" disabled>
                       Select a vehicle type...
@@ -180,7 +180,7 @@ const VehicleTypeForm: React.FC = () => {
                   onChange={handleChange}
                 />
               </div>
-              <div className="flex  justify-between">
+              <div className="flex justify-between">
                 <button
                   className="text-[#107D9F] border-[#107D9F] px-4 py-2 rounded"
                   type="button"

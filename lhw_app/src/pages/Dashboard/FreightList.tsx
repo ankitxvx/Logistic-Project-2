@@ -49,6 +49,7 @@ const FreightList: React.FC<FreightListProps> = ({ vType }) => {
         <table className="min-w-full border-collapse">
           <thead className='bg-gray-100   '>
             <tr>
+              <th className="border border-gray-300 text-left px-4 py-2">Sno.</th>
               <th className="border border-gray-300 text-left px-4 py-2">Vehicle</th>
               <th className="border border-gray-300 text-left px-4 py-2">Distance</th>
               <th className="border border-gray-300 text-left px-4 py-2">Total KM</th>
@@ -63,6 +64,8 @@ const FreightList: React.FC<FreightListProps> = ({ vType }) => {
           <tbody>
             {freights.map((freight, index) => (
               <tr key={index}>
+                
+                <td className="border border-gray-200 px-4 py-2">{index+1}</td>
                 <td className="border border-gray-200 px-4 py-2">{freight.vehicleType}</td>
                 <td className="border border-gray-200 px-4 py-2">{freight.distance}</td>
                 <td className="border border-gray-200 px-4 py-2">{freight.totalKm}</td>

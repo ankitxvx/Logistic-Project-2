@@ -18,7 +18,8 @@ router.get('/:code', async (req: Request, res: Response) => {
 });
 
 router.post('/addloading', async(req:Request, res:Response) => {
-  const{loadingNumber,
+  const{
+    loadingNumber,
     vehicleCode,
     vehicleType,
     vehicleNumber,

@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+interface Loading {
+  loadingNumber: number;
+  vehicleCode: string;
+  vehicleType: string;
+  vehicleNumber: string;
+  driverName: string;
+  driverPhone: string;
+  distance: string;
+  overloaded: string;
+  driverFreight: string;
+  customerTripPrice: string;
+}
+
 function Loading() {
   const[selfArrange, setSelfArrange] = useState(false);
 
@@ -18,7 +31,7 @@ function Loading() {
       customerTripPrice: ''
     }
   ]);
-  
+
   const fetchDistanceData = async (index:any, distance:any) => {
     try {
       const response = await axios.get(`http://localhost:5000/distances/${distance}`);
@@ -122,23 +135,22 @@ function Loading() {
     }));
     setEntries(updatedEntries);
   };
-
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const finalFormData = {
-      ...entries,
-    };
-    console.log(finalFormData); 
+  
+  const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/loadings/addloading", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(finalFormData),
-      });
+      const response = await fetch(
+        "http://localhost:5000/loadings/addloading",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(entries),
+        }
+      );
+  
       if (response.ok) {
-        console.log("Loading Form data saved successfully!");
+        console.log("Loading data saved successfully!");
         setEntries([{
           loadingNumber: 1,
           vehicleCode: '',
@@ -157,7 +169,8 @@ function Loading() {
     } catch (error) {
       console.error("Error saving form data:", error);
     }
-  }
+  };
+
   return (
     <div className="p-40">
       <div className="gap-[40px] flex flex-col">
@@ -170,7 +183,7 @@ function Loading() {
             <div className="flex gap-5 w-[28rem]">
               <div className="flex border gap-2 w-[20rem] rounded-lg bg-white px-5 text-[#4B4DED] font-bold py-2">
                 <p>Self Arrange</p>
-                <input type="checkbox" className="cursor-pointer checkboxx" checked= {selfArrange} onChange={()=>setSelfArrange(!selfArrange)}/>
+                <input type="checkbox" className="cursor-pointer checkboxx" checked={selfArrange} onChange={() => setSelfArrange(!selfArrange)} />
               </div>
               <button
                 className="flex border items-center gap-2 border-[#4B4DED] rounded-lg bg-white px-[15px] text-[#4B4DED] font-bold py-[4px]"
@@ -178,7 +191,10 @@ function Loading() {
               >
                 Add
               </button>
-              <button className="flex border items-center border-[#4B4DED] rounded-lg bg-white px-[15px] text-[#4B4DED] font-bold py-[4px]" onSubmit={handleSubmit}>
+              <button 
+                className="flex border items-center border-[#4B4DED] rounded-lg bg-white px-[15px] text-[#4B4DED] font-bold py-[4px]"
+                onClick={handleSubmit}
+              >
                 Save
               </button>
             </div>
@@ -196,7 +212,7 @@ function Loading() {
               <p className="ml-2 w-20">Driver Freight</p>
               <p className="w-20">Customer Freight</p>
             </div>
-            {entries.map((entry, index) => (
+            {entries.map((entry:any, index:any) => (
               <div key={index} className="flex mb-3 items-center gap-3">
                 <input
                   type="number"

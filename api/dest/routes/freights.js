@@ -46,26 +46,13 @@ router.get('/freights/:vtype', (req, res) => __awaiter(void 0, void 0, void 0, f
         res.status(400).json('Error: ' + err);
     }
 }));
-// router.get('/freights/:vtype', async (req: Request, res: Response) => {
-//     try{
-//         const freight = await Freight.find({vehicleType: req.params.vtype});
-//         res.json(freight);
-//     } catch(err){
-//         res.status(400).json('Error: ' + err);
-//     }
-// });
-router.get('//freights/:vtype', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/freight/:distance', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("getVehicleByCode");
-        const vehicleCode = req.params.vehicleCode;
-        const vehicle = yield freight_1.default.findOne({ vehicleCode: vehicleCode });
-        if (!vehicle) {
-            return res.status(404).json({ message: "Vehicle not found" });
-        }
-        res.status(200).json(vehicle);
+        const freight = yield freight_1.default.findOne({ distance: req.params.distance });
+        res.json(freight);
     }
-    catch (error) {
-        res.status(500).json({ message: "Server error", error });
+    catch (err) {
+        res.status(400).json('Error: ' + err);
     }
 }));
 exports.default = router;

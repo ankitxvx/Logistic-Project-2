@@ -12,6 +12,14 @@ router.get('/alldriver', async (req: Request, res: Response) => {
     }
 });
 
+router.get('/driver/:code', async (req: Request, res: Response) => {
+    try {
+        const driver = await Driver.find({vehicleCode: req.params.code});
+        res.json(driver);
+    } catch (err) {
+        res.status(400).json('Error: ' + err);
+    }
+});
 router.post('/adddriver', async (req: Request, res: Response) => {
     const {  sn,
         vehicleType,

@@ -159,7 +159,7 @@ const Dashboard: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="/past-orders"
+                  to="/loading"
                   className="flex items-center p-2 text-black rounded-lg hover:bg-[#091E420A] group"
                 >
                   <svg

@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const vehicles_1 = __importDefault(require("./routes/vehicles"));
 const freights_1 = __importDefault(require("./routes/freights"));
 const drivers_1 = __importDefault(require("./routes/drivers"));
+const entries_1 = __importDefault(require("./routes/entries"));
 const app = (0, express_1.default)();
 const port = 5000;
 app.use((0, cors_1.default)());
@@ -28,6 +29,7 @@ app.use(express_1.default.json());
 app.use('/vehicles', vehicles_1.default);
 app.use('/freights', freights_1.default);
 app.use('/drivers', drivers_1.default);
+app.use('/entries', entries_1.default);
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });

@@ -88,7 +88,7 @@ const Table: React.FC = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="border border-gray-300 text-left px-4 py-2">S.NO</th>
-                    <th className="border w-[549px] px-[16px] border-gray-300 text-left">
+                    <th className="border  px-[16px] border-gray-300 text-left">
                       Vehicle Type
                     </th>
                     <th className="border border-gray-300 text-left px-4 py-2">Capacity</th>

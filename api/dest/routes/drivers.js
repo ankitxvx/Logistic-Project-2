@@ -24,6 +24,15 @@ router.get('/alldriver', (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(400).json('Error: ' + err);
     }
 }));
+router.get('/driver/:code', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const driver = yield driver_1.default.find({ vehicleCode: req.params.code });
+        res.json(driver);
+    }
+    catch (err) {
+        res.status(400).json('Error: ' + err);
+    }
+}));
 router.post('/adddriver', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { sn, vehicleType, driverName, vehicleCode, vehicleNumber, driverPhone } = req.body;
     const newDriver = new driver_1.default({

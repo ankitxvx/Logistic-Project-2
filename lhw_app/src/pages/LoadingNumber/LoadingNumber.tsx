@@ -1,5 +1,7 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import axios from "axios";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 
 interface Form {
   _id?: string;
@@ -13,6 +15,15 @@ interface Form {
   overloaded?: string;
   driverFreight: number;
   customerFreight: number;
+}
+
+interface Driver {
+  sn: string;
+  vehicleType: string;
+  driverName: string;
+  vehicleCode: string;
+  vehicleNumber: string;
+  driverPhone: string;
 }
 
 const initialFormState: Form = {
@@ -35,6 +46,8 @@ const Loading: React.FC = () => {
   const [code, setCode] = useState<string>("");
   const [dist, setDist] = useState<number>(0);
   const [arrange, setArrange] = useState<boolean>(false);
+  const [data, setData] = useState<Driver[]>([]);
+  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
 
   const fetchDriverData = async (vehicleCode: string) => {
     try {
@@ -61,44 +74,68 @@ const Loading: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchDriverData(code);
-    fetchFreightData(dist);
+    if (code) {
+      fetchDriverData(code).then((data) => {
+        if (data && data.length > 0) {
+          setForm((prevForm) => ({
+            ...prevForm,
+            driverName: data[0].driverName,
+            driverNumber: data[0].driverPhone,
+            vehicleType: data[0].vehicleType,
+            vehicleNumber: data[0].vehicleNumber,
+          }));
+        }
+      });
+    }
+
+    if (dist) {
+      fetchFreightData(dist).then((data) => {
+        if (data) {
+          handleOverLoaded(data);
+        }
+      });
+    }
   }, [code, dist, overloaded]);
+
+  const handleOverLoaded = async (data: any) => {
+    if (overloaded === "yes" && data) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        driverFreight: data.overLimitTripPrice,
+        customerFreight: data.overLimitPrice,
+      }));
+    } else if (data) {
+      setForm((prevForm) => ({
+        ...prevForm,
+        driverFreight: data.driverFreight,
+        customerFreight: data.customerTripPrice,
+      }));
+    }
+  };
 
   const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    form.overloaded = overloaded;
-    setForm({ ...form, [name]: value });
-
-    if (name === "vehicleCode") {
-      const data = await fetchDriverData(value);
-      if (data && data.length > 0) {
-        setCode(value);
-        setForm((prevForm) => ({
-          ...prevForm,
-          driverName: data[0].driverName,
-          driverNumber: data[0].driverPhone,
-          vehicleType: data[0].vehicleType,
-          vehicleNumber: data[0].vehicleNumber,
-        }));
-      }
-    }
     if (name === "distance") {
       setDist(parseInt(value));
-      const data = await fetchFreightData(parseInt(value));
-      if (overloaded === "yes" && data) {
-        setForm((prevForm) => ({
-          ...prevForm,
-          driverFreight: data.overLimitTripPrice,
-          customerFreight: data.overLimitPrice,
-        }));
-      } else if (data) {
-        setForm((prevForm) => ({
-          ...prevForm,
-          driverFreight: data.driverFreight,
-          customerFreight: data.customerTripPrice,
-        }));
-      }
+    }
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+  };
+
+  const handleDriverChange = (event: any, value: Driver | null) => {
+    if (value) {
+      setSelectedDriver(value);
+      setCode(value.vehicleCode);
+      setForm((prevForm) => ({
+        ...prevForm,
+        vehicleCode: value.vehicleCode,
+        driverName: value.driverName,
+        driverNumber: value.driverPhone,
+        vehicleType: value.vehicleType,
+        vehicleNumber: value.vehicleNumber,
+      }));
     }
   };
 
@@ -116,15 +153,32 @@ const Loading: React.FC = () => {
     setEntries(updatedEntries);
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/drivers/alldriver"
+      );
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching all drivers:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const handleSaveEntries = async () => {
     if (arrange === true) {
-      const data = axios.get("http://localhost:5000/entries/allentries");
-      data.then((res) => {
-        const load = res.data.sort(
+      try {
+        const { data } = await axios.get(
+          "http://localhost:5000/entries/allentries"
+        );
+        const sortedEntries = data.sort(
           (a: any, b: any) => a.loadingNumber - b.loadingNumber
         );
-        const lastEntry = load[load.length - 1];
-        const response = axios.post("http://localhost:5000/entries/addentry", {
+        const lastEntry = sortedEntries[sortedEntries.length - 1];
+        await axios.post("http://localhost:5000/entries/addentry", {
           loadingNumber: lastEntry.loadingNumber + 1,
           vehicleCode: "NA",
           vehicleType: "NA",
@@ -137,26 +191,24 @@ const Loading: React.FC = () => {
           customerFreight: 0,
           arrangedBy: "self",
         });
-    
-      });
 
-      setArrange(false);
-      setEntries([]);
+        setArrange(false);
+        setEntries([]);
+      } catch (error) {
+        console.error("Error arranging entries:", error);
+      }
     } else {
       try {
         for (const entry of entries) {
-          const response = await axios.post(
-            "http://localhost:5000/entries/addentry",
-            entry
-          );
-          
+          await axios.post("http://localhost:5000/entries/addentry", entry);
         }
+        setEntries([]);
       } catch (error) {
         console.error("Error saving entries:", error);
       }
-      setEntries([]);
     }
   };
+
   const handleArrange = async () => {
     setArrange(!arrange);
   };
@@ -196,10 +248,23 @@ const Loading: React.FC = () => {
         {arrange === true ? (
           <h1>Click on Save Button</h1>
         ) : (
-          <div className="w-full">
+          <div className=" flex flex-col justify-between  w-full">
+            <div className="mb-10">
+            <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                value={selectedDriver}
+                onChange={handleDriverChange}
+                options={data}
+                getOptionLabel={(option) => option.vehicleCode}
+                sx={{ width: "300px", height: "2rem" }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Vehicle" />
+                )}
+              />
+            </div>
             <div className="flex mb-3 items-center gap-3 w-full">
               <p className="w-20">Loading Number</p>
-              <p className="w-20">Vehicle Code</p>
               <p className="w-20">Vehicle Type</p>
               <p className="w-20">Vehicle Number</p>
               <p className="w-20">Driver Name</p>
@@ -218,26 +283,20 @@ const Loading: React.FC = () => {
                 onChange={handleInputChange}
                 className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
               />
-              <input
-                type="text"
-                name="vehicleCode"
-                value={form.vehicleCode}
-                onChange={handleInputChange}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
-              />
+               
               <input
                 type="text"
                 name="vehicleType"
                 value={form.vehicleType}
                 onChange={handleInputChange}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
               />
               <input
                 type="text"
                 name="vehicleNumber"
                 value={form.vehicleNumber}
                 onChange={handleInputChange}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
               />
               <input
                 type="text"
@@ -251,21 +310,21 @@ const Loading: React.FC = () => {
                 name="driverNumber"
                 value={form.driverNumber}
                 onChange={handleInputChange}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
               />
               <input
                 type="number"
                 name="distance"
                 value={form.distance}
                 onChange={handleInputChange}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
                 placeholder="Km"
               />
               <select
                 name="overloaded"
                 value={overloaded}
                 onChange={(e) => setOverloaded(e.target.value)}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
               >
                 <option value="no">No</option>
                 <option value="yes">Yes</option>
@@ -282,7 +341,7 @@ const Loading: React.FC = () => {
                 name="customerFreight"
                 value={form.customerFreight}
                 onChange={handleInputChange}
-                className="w-20 border border-gray-300  rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500"
               />
             </div>
             {entries.map((entry, index: number) => (
@@ -300,19 +359,19 @@ const Loading: React.FC = () => {
                   type="text"
                   value={entry.vehicleCode}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <input
                   type="text"
                   value={entry.vehicleType}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <input
                   type="text"
                   value={entry.vehicleNumber}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <input
                   type="text"
@@ -324,19 +383,19 @@ const Loading: React.FC = () => {
                   type="number"
                   value={entry.driverNumber}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <input
                   type="number"
                   value={entry.distance}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <input
                   type="text"
                   value={entry.overloaded}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <input
                   type="number"
@@ -348,7 +407,7 @@ const Loading: React.FC = () => {
                   type="number"
                   value={entry.customerFreight}
                   readOnly
-                  className="w-20 border border-gray-300  rounded-lg px-3 py-1 bg-gray-100"
+                  className="w-20 border border-gray-300 rounded-lg px-3 py-1 bg-gray-100"
                 />
                 <button
                   className="text-red-500 font-bold"

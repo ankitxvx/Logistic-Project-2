@@ -14,7 +14,7 @@ const App: React.FC = () => {
          <Route path="/form" element={<VehicleTypeForm/>} />
          <Route path='/vehicle' element = {<Table/>} />
          <Route path='/loading' element = {<Loading/>}/>
-         <Route path='/loading' element = {<Loading/>}/>
+         
       </Routes>
       
     </Router>

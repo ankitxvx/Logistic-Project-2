@@ -4,6 +4,8 @@ import cors from 'cors';
 import vehicleRouter from "./routes/vehicles";
 import freightRouter from "./routes/freights";
 import driverRouter from "./routes/drivers";
+import loadingRouter from "./routes/loadings";
+import distanceRouter from "./routes/distances";
 
 const app = express();
 const port = 5000; 
@@ -24,10 +26,12 @@ mongoose.connect(uri)
     console.error('MongoDB connection error:', err);
   });
 
-  app.use(express.json());
+app.use(express.json());
 app.use('/vehicles', vehicleRouter);
 app.use('/freights', freightRouter);
 app.use('/drivers', driverRouter);
+app.use('/loadings', loadingRouter);
+app.use('/distances', distanceRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

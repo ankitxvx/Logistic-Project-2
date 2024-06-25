@@ -25,7 +25,7 @@ const DriverForm: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -104,19 +104,19 @@ const DriverForm: React.FC = () => {
                     id="vehicleType"
                     name="vehicleType"
                     value={formData.vehicleType}
-                    onChange={()=>handleChange}
+                    onChange={handleChange}
                   >
                     <option value="" disabled>
                       Select a vehicle type...
                     </option>
-                    <option value="tuktuk">Tuk Tuk</option>
-                    <option value="chotaHathi">Chota Hathi</option>
-                    <option value="pickup">Pickup</option>
-                    <option value="other">Other</option>
+                    <option value="Tuk Tuk">Tuk Tuk</option>
+                    <option value="Chota Hathi">Chota Hathi</option>
+                    <option value="Pickup">Pickup</option>
+                    <option value="Other">Other</option>
                   </select>
                   <div>
                   </div>
-                  {formData.vehicleType === "other" && (
+                  {formData.vehicleType === "Other" && (
                     <input
                       type="text"
                       className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

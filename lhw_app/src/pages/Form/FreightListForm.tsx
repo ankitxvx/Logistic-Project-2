@@ -112,16 +112,16 @@ const FreightListForm: React.FC = () => {
                     value={formData.vehicleType}
                     onChange={handleChange}  
                   >
-                    <option value="" disabled>
+                      <option value="" disabled>
                       Select a vehicle type...
                     </option>
                     <option value="Tuk Tuk">Tuk Tuk</option>
                     <option value="Chota Hathi">Chota Hathi</option>
                     <option value="Pickup">Pickup</option>
-                    <option value="Truck">Truck</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
-                {formData.vehicleType === "other" && (
+                {formData.vehicleType === "Other" && (
                   <input
                     type="text"
                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

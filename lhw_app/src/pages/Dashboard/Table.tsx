@@ -63,16 +63,6 @@ const Table: React.FC = () => {
           >
             <h1 className="text-[#107D9F] text-2xl mb-0">Drivers</h1>
           </button>
-          {/* <button
-            className={`py-2 px-4 ${
-              activeTab === "freightList"
-                ? "border-b-2 border-teal-600 text-teal-600"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("freightList")}
-          >
-            <h1 className="text-[#107D9F] text-2xl mb-0">Freight List</h1>
-          </button> */}
         </div>
       </div>
 

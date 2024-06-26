@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import VehicleTypeForm from './pages/Form/VehicleTypeForm';
 import Table from './pages/Dashboard/Table';
 import Loading from './pages/LoadingNumber/LoadingNumber';
+import Logistic from './pages/Dashboard/Logistic';
  
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
          <Route path="/form" element={<VehicleTypeForm/>} />
          <Route path='/vehicle' element = {<Table/>} />
          <Route path='/loading' element = {<Loading/>}/>
+         <Route path='/logistic' element = {<Logistic/>}/>
          
       </Routes>
       
